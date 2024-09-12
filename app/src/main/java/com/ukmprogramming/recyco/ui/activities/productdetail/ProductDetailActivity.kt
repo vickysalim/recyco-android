@@ -9,11 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
+import com.ukmprogramming.recyco.BuildConfig
 import com.ukmprogramming.recyco.R
 import com.ukmprogramming.recyco.data.network.response.models.MarketItem
 import com.ukmprogramming.recyco.databinding.ActivityProductDetailBinding
 import com.ukmprogramming.recyco.ui.activities.requestdelivery.RequestDeliveryActivity
-import com.ukmprogramming.recyco.util.Constants
 import com.ukmprogramming.recyco.util.Helpers
 import com.ukmprogramming.recyco.util.ResultState
 import com.ukmprogramming.recyco.util.UserRoles
@@ -51,27 +51,22 @@ class ProductDetailActivity : AppCompatActivity() {
                     btnRequestDelivery.isVisible = resultState.data.role == UserRoles.C_LARGE.name
                     tvUserName.text = resultState.data.name
                 } else if (resultState is ResultState.Error) {
-                    resultState.exception.getData()?.handleHttpException(this@ProductDetailActivity)
-                        ?.let { message ->
-                            Toast.makeText(this@ProductDetailActivity, message, Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                    resultState.exception.getData()?.handleHttpException()?.let { message ->
+                        Toast.makeText(this@ProductDetailActivity, message, Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
             }
 
             Glide.with(this@ProductDetailActivity)
-                .load(GlideUrl("${Constants.BASE_URL}${marketItem.thumbnailUrl}") {
+                .load(GlideUrl("${BuildConfig.BASE_URL}${marketItem.thumbnailUrl}") {
                     mapOf(Pair("ngrok-skip-browser-warning", "ngrok-skip-browser-warning"))
                 })
                 .timeout(30000)
                 .placeholder(R.drawable.ic_broken_image)
                 .error(R.drawable.ic_broken_image)
                 .into(ivThumbnail)
-            tvDate.text = if (marketItem.postedAt != null) {
-                Helpers.formatDate(marketItem.postedAt)
-            } else {
-                "-"
-            }
+            tvDate.text = Helpers.formatDate(marketItem.postedAt)
             tvProductName.text = marketItem.name
             tvWeight.text = getString(R.string.weight_template, marketItem.weight.toString())
             tvPrice.text = getString(R.string.price_template, marketItem.price.toString())

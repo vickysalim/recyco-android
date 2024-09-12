@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.ukmprogramming.recyco.R
 import com.ukmprogramming.recyco.databinding.ActivityAddDiscussionBinding
+import com.ukmprogramming.recyco.ui.fragments.forum.ForumFragment
 import com.ukmprogramming.recyco.util.ResultState
 import com.ukmprogramming.recyco.util.handleHttpException
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,13 +47,13 @@ class AddDiscussionActivity : AppCompatActivity() {
                         "Add Discussion Success",
                         Toast.LENGTH_SHORT
                     ).show()
+                    setResult(ForumFragment.RESULT_CODE_ADD_DISCUSSION)
                     finish()
                 } else if (resultState is ResultState.Error) {
-                    resultState.exception.getData()?.handleHttpException(this@AddDiscussionActivity)
-                        ?.let { message ->
-                            Toast.makeText(this@AddDiscussionActivity, message, Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                    resultState.exception.getData()?.handleHttpException()?.let { message ->
+                        Toast.makeText(this@AddDiscussionActivity, message, Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
             }
         }
