@@ -48,15 +48,19 @@ object Helpers {
         return myFile
     }
 
-    fun formatDate(date: String): String {
-        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).parse(date)?.let {
-            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).format(it)
+    fun formatDate(date: String?): String {
+        return date?.let {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).parse(it)?.let { parsedDate ->
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).format(parsedDate)
+            }
         } ?: "-"
     }
 
-    fun formatDateNoTime(date: String): String {
-        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).parse(date)?.let {
-            SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(it)
+    fun formatDateNoTime(date: String?): String {
+        return date?.let {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).parse(it)?.let { parsedDate ->
+                SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(parsedDate)
+            }
         } ?: "-"
     }
 }
